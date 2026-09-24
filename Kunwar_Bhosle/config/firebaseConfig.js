@@ -6,8 +6,13 @@ let serviceAccount;
 
 if (process.env.FIREBASE_SERVICE_ACCOUNT) {
   try {
+    let rawStr = process.env.FIREBASE_SERVICE_ACCOUNT.trim();
+    // Remove wrapping quotes if accidentally added by user
+    if ((rawStr.startsWith("'") && rawStr.endsWith("'")) || (rawStr.startsWith('"') && rawStr.endsWith('"'))) {
+      // only strip if it wraps valid json (not double stringified object)
+    }
     serviceAccount = typeof process.env.FIREBASE_SERVICE_ACCOUNT === 'string'
-      ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+      ? JSON.parse(rawStr)
       : process.env.FIREBASE_SERVICE_ACCOUNT;
 
     if (serviceAccount && serviceAccount.private_key) {
